@@ -106,7 +106,7 @@
   endfor
 -%}
 
-<{% if section.settings.sticky_header_type != 'none' %}sticky-header data-sticky-type="{{ section.settings.sticky_header_type }}"{% else %}div{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+{% comment %} <{% if section.settings.sticky_header_type != 'none' %}sticky-header data-sticky-type="{{ section.settings.sticky_header_type }}"{% else %}div{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
   {%- liquid
     assign social_links = false
     assign localization_forms = false
@@ -160,6 +160,9 @@
       {%- endif -%}
     {%- endif -%}
 
+    <div>
+      
+    </div>
     {%- liquid
       if section.settings.menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
@@ -284,7 +287,297 @@
 
 {%- if settings.cart_type == "notification" -%}
   {%- render 'cart-notification', color_scheme: section.settings.color_scheme, desktop_menu_type: section.settings.menu_type_desktop -%}
-{%- endif -%}
+{%- endif -%} {% endcomment %}
+<header>
+  <div class="">
+    <div class="tw-flex tw-justify-between tw-items-center tw-px-4 tw-py-1">
+        <div class="tw-w-full tw-opacity-0">
+          {% comment %} dammy text {% endcomment %}
+        </div>
+        <div class="tw-w-full">
+          <a href="{{ routes.root_url }}" class="tw-text-2xl tw-font-bold">
+            <h1 class="tw-text-slate-700 tw-text-center">{{ shop.name }}</h1>
+          </a>
+        </div>
+        <div class="tw-flex tw-w-full tw-justify-end tw-gap-4">
+          <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
+            {% comment %} <div class="desktop-localization-wrapper">
+              {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+                <localization-form class="small-hide medium-hide" data-prevent-hide>
+                  {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+                    <div>
+                      <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                      {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+                    </div>
+                  {%- endform -%}
+                </localization-form>
+              {% endif %}
+      
+              {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+                <localization-form class="small-hide medium-hide" data-prevent-hide>
+                  {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+                    <div>
+                      <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                      {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+                    </div>
+                  {%- endform -%}
+                </localization-form>
+              {%- endif -%}
+            </div> {% endcomment %}
+            {% comment %} {% render 'header-search', input_id: 'Search-In-Modal' %} {% endcomment %}
+{% comment %}       
+            {%- if shop.customer_accounts_enabled -%}
+              <a
+                href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+                class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
+                rel="nofollow"
+              >
+                {%- if section.settings.enable_customer_avatar -%}
+                  <account-icon>
+                    {%- if customer and customer.has_avatar? -%}
+                      {{ customer | avatar }}
+                    {%- else -%}
+                      <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+                    {%- endif -%}
+                  </account-icon>
+                {%- else -%}
+                  <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
+                {%- endif -%}
+                <span class="visually-hidden">
+                  {%- liquid
+                    if customer
+                      echo 'customer.account_fallback' | t
+                    else
+                      echo 'customer.log_in' | t
+                    endif
+                  -%}
+                </span>
+              </a>
+            {%- endif -%} {% endcomment %}
+      
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when '@app' -%}
+                  {% render block %}
+              {%- endcase -%}
+            {%- endfor -%}
+            {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+              <localization-form class=" medium-hide" data-prevent-hide>
+                {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                    {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {% endif %}
+    
+            {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+              <localization-form class=" medium-hide" data-prevent-hide>
+                {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                    {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {%- endif -%}
+          </div>
+        </div>
+    </div>
+
+    {% comment %} <div class="tw-hidden md:tw-block">
+      {%- liquid
+      if section.settings.menu != blank
+        if section.settings.menu_type_desktop == 'dropdown'
+          render 'header-dropdown-menu'
+        elsif section.settings.menu_type_desktop != 'drawer'
+          render 'header-mega-menu'
+        endif
+      endif
+    %}
+    </div> {% endcomment %}
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('sp-search-input');
+    const suggestionsBox = document.getElementById('suggestions');
+
+    searchInput.addEventListener('input', function() {
+      const query = searchInput.value.trim();
+
+      console.log(query);
+      console.log(`{{ shop.url }}/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product`);
+      if (query.length > 2) { // サジェストを表示するための最小文字数
+        fetch(`{{ shop.url }}/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product`)
+          .then(response => {
+            console.log(response);
+            return response.json()
+          })
+          .then(data => {
+            console.log(data);
+            const suggestions = data.resources.results.products;
+            if (suggestions.length > 0) {
+              suggestionsBox.innerHTML = suggestions.map(product => `
+                <div class="tw-p-2 tw-border-b tw-border-gray-200">
+                  <a href="${product.url}" class="tw-text-sm tw-text-gray-700">${product.title}</a>
+                </div>
+              `).join('');
+              suggestionsBox.style.display = 'block';
+            } else {
+              suggestionsBox.style.display = 'none';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching suggestions:', error);
+            suggestionsBox.style.display = 'none';
+          });
+      } else {
+        suggestionsBox.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!suggestionsBox.contains(event.target) && event.target !== searchInput) {
+        suggestionsBox.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<div id="sp-bottom-modal-container" class="md:tw-hidden tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-z-40">
+  <div class="tw-relative tw-flex tw-flex-col tw-justify-between tw-items-center tw-bg-slate-100 tw-shadow-up  tw-px-4 tw-py-4 tw-pb-6" >
+    <div id="sp-bottom-modal-search-container" class="tw-w-full tw-z-40  tw-bg-gray-200 tw-mb-5 tw-transition-all tw-duration-300" style="height: 0px;">
+      <div class="tw-w-full tw-h-full tw-flex tw-items-end tw-px-4">
+        {% comment %} <form  action="{{ routes.search_url }}" method="get" class="tw-w-full tw-mb-5"> {% endcomment %}
+          <input  type="text" name="q" id="sp-search-input" class="tw-w-full tw-h-16 tw-px-2 tw-rounded-md tw-bg-gray-100 tw-shadow-sm tw-transition-all tw-duration-100" style="transform: translateY(110px); opacity: 0;" placeholder="商品名を入力" autocomplete="off">
+          <div id="suggestions" class="tw-absolute tw-bg-white tw-shadow-md tw-rounded-md tw-mt-1 tw-w-full tw-z-10" style="display: none;"></div>
+        {% comment %} </form> {% endcomment %}
+      </div>
+    </div>
+    <div class="tw-absolute -tw-top-6 tw-left-0 tw-right-0 tw-z-50 tw-translate-x-1/2">
+        <button id="sp-bottom-modal-btn" class="tw-z-50 tw-h-[60px] tw-w-[60px] tw-shadow-up  tw-p-2 -tw-translate-x-1/2  tw-rounded-full tw-flex tw-justify-center tw-items-center tw-bg-slate-700 tw-border-2 tw-border-white">
+          <div class="tw-flex tw-justify-center tw-items-center tw-flex-col tw-text-center">
+            <svg class="tw-text-white tw-inline-block tw-w-8 tw-h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+              <path fill-rule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75ZM2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Zm0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+            <span class="tw-inline-block tw-text-white tw-text-xs tw-font-bold">メニュー</span>
+          </div>
+        </button>
+      </div>
+      <ul class="tw-flex tw-items-center tw-w-full tw-text-[1.2rem] tw-text-center">
+        <a href="{{ routes.account_url }}" class="tw-w-1/5 tw-flex tw-justify-center tw-flex-col tw-items-center">
+        <svg class="tw-h-6 tw-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+          <span class="tw-text-xs tw-mt-1 tw-font-bold">ログイン</span>
+        </a>
+        <a id="sp-search-modal-btn" class="tw-w-1/5 tw-flex tw-justify-center tw-flex-col tw-items-center">
+          <svg class="tw-h-6 tw-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <span class="tw-text-xs tw-mt-1 tw-font-bold">検索</span>
+        </a>
+        <a class="tw-w-1/5">
+        <p class="tw-opacity-0">
+          dammy text
+        </p>
+        </a>
+        <a class="tw-w-1/5 tw-flex tw-justify-center tw-flex-col tw-items-center">
+        <svg class="tw-h-6 tw-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+        </svg>
+
+        <span class="tw-text-xs tw-mt-1 tw-font-bold">お気に入り</span>
+      </a>
+      <a href="{{ routes.cart_url }}" class="tw-w-1/5 tw-flex tw-justify-center tw-flex-col tw-items-center">
+      <svg class="tw-h-6 tw-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+      </svg>
+
+        <span class="tw-text-xs tw-mt-1 tw-font-bold">カート</span>
+      </a>
+      </ul>
+      <div id="sp-bottom-modal" class="tw-absolute tw-bottom-0  tw-right-0 tw-left-0 tw-transition-transform tw-duration-300  tw-bg-white tw-z-[9999] tw-h-[500px] tw-p-4" style="transform: translateY(100%);">
+        <div class="tw-flex tw-justify-end">
+          <button id="sp-bottom-modal-close" class=" tw-bg-black tw-text-white tw-p-4">閉じる</button>
+        </div>
+      <div class=" tw-h-full tw-w-full tw-flex tw-flex-col tw-bg-white">
+        {% for link in section.settings.menu.links %}
+          <a href="{{ link.url }}" class="tw-p-4">{{ link.title }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchBtn = document.getElementById('sp-search-modal-btn');
+      const searchContainer = document.getElementById('sp-bottom-modal-search-container');
+      const searchInput = document.getElementById('sp-search-input');
+      
+      let isOpen = false; // モーダルの状態を追跡
+
+      searchBtn.addEventListener('click', function() {
+        if (isOpen) {
+          searchInput.style.transform = 'translateY(110px)';
+          searchInput.style.opacity = '0';
+          searchContainer.style.height = '0'; // モーダルを閉じる
+        } else {
+          searchInput.style.transform = 'translateY(0)';
+          searchInput.style.opacity = '1';
+          searchContainer.style.height = '110px'; // モーダルを開く
+        }
+        isOpen = !isOpen; // 状態をトグル
+      });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const bottomBar = document.getElementById('sp-bottom-modal-container');
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', function() {
+      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (currentScrollTop > lastScrollTop) {
+        // 下にスクロール
+        bottomBar.style.transform = 'translateY(150%)';
+        bottomBar.style.transition = 'transform 0.3s ease-out';
+      } else {
+        // 上にスクロール
+        bottomBar.style.transform = 'translateY(0)';
+        bottomBar.style.transition = 'transform 0.3s ease-out';
+      }
+
+      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // For Mobile or negative scrolling
+    });
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuButton = document.getElementById('sp-bottom-modal-btn');
+    const bottomModal = document.getElementById('sp-bottom-modal');
+    const closeButton = document.getElementById('sp-bottom-modal-close');
+
+    menuButton.addEventListener('click', function() {
+      console.log('click');
+      bottomModal.style.transform = 'translateY(0%)';
+      document.body.style.overflow = 'hidden'; // スクロールを無効化
+    });
+
+    closeButton.addEventListener('click', function() {
+      console.log('close');
+      bottomModal.style.transform = 'translateY(100%)';
+      document.body.style.overflow = 'auto'; // スクロールを再度有効化
+    });
+
+  });
+</script>
 
 {% javascript %}
   class StickyHeader extends HTMLElement {
@@ -642,3 +935,8 @@
   ]
 }
 {% endschema %}
+
+
+
+
+
